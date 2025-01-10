@@ -50,31 +50,27 @@ A falta d'una convenció oficial universalment acceptada, he triat aquestes prá
         1) nom de l'element que identifica (taula font en singular) seguit de _id: 
             producto_id
         
-        2) si la tabla aplica només a un subconjunt d'items de la taula font, llavors es fa servir el nom del subconjunt.
+        2) si la taula aplica només a un subconjunt d'items de la taula font, llavors es fa servir el nom del subconjunt.
             pizza_id
-    B) A l'apartat foreign keys: fk_nomcolumna:
+    B) A l'apartat foreign keys: fk_aliastaula_nomcolumna:
             fk_producto_id
             fk_pizzas_id 
         
 4. Resta de camps: el més descriptiu i simple possible, sense menció a la taula si no aporta info necessària.
 
 5. Indexos: 
-    A) en general: prefixe ix_taula_columna:
-            ix_categoria_pizza_pizza_id
+    A) en general: prefixe ix_aliastaula_columna:
+            ix_c_pizza_pizza_id
         si la taula és associativa y, per tant, amb nomb compost es faran servir els alies de les dues taules que li donen nom:
-            ix_p_pe_producto_id 
+            ix_ppe_producto_id 
 
-        on p_pe = producto_pedido
+        on ppe = producto_pedido
+        sí, es verdad, puede haber una ambigüedad pero es un ejercicio de clase, no ens flipem!
     
     B) indexos creats automaticament per que son unics:
             nombre_UNIQUE
 
 6. Alias: inicial de la taula, si ja está ocupada 2 primeres lletres. Quan hi hagi inicials repetides es detallarà l'alies de les taules amb inicials repetides als comentaris.
-
-Fonts:
-https://launchbylunch.com/posts/2014/Feb/16/sql-naming-conventions/#naming-conventions
-https://www.sqlstyle.guide/#naming-conventions
-
 
 
 ## 🛠️ Execució
@@ -84,12 +80,11 @@ https://www.sqlstyle.guide/#naming-conventions
    git clone 
    
 
-2. Importa els fitxers SQL que defineixen les estructures de les bases de dades al teu servidor MySQL.
+2. Importa i executa els fitxers SQL que defineixen les estructures de les bases de dades al teu servidor MySQL.
 
-3. Revisa els diagrames entitat-relació inclosos al repositori per entendre les relacions.
 
 ## 📂 Estructura del repositori
-diagrama_optica.pdf: Model entitat-relació per a l'òptica.
-diagrama_pizzeria.pdf: Model entitat-relació per a la pizzeria.
-estructura_optica.sql: Script SQL per a la base de dades de l'òptica.
-estructura_pizzeria.sql: Script SQL per a la base de dades de la pizzeria.
+model_relacional_optica.png: Model entitat-relació per a l'òptica.
+model_relacional_pizzeria.png: Model entitat-relació per a la pizzeria.
+bbdd_optica.sql: Script SQL per crear, poblar i fes les consultes de test de l'òptica.
+bbdd_pizzeria.sql: Script SQL per crear, poblar i fes les consultes de test de la pizzeria.
