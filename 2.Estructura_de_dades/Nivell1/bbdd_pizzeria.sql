@@ -127,7 +127,8 @@ CREATE TABLE IF NOT EXISTS `Pizzeria`.`pedidos` (
   `cliente_id` INT NOT NULL,
   `fecha_y_hora_pedido` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Es grava automaticament la data de creació de la comanda',
   `Forma_entrega` ENUM("domicilio", "recogida") NOT NULL,
-  `importe_pedido` DECIMAL(10,2) NOT NULL COMMENT 'Este campo debe calcularse mediante el formulario de recepción del pedido a partir de los campos de la tabla  productos_pedidos y productos',
+  `importe_pedido` DECIMAL(10,2) NOT NULL DEFAULT 0 COMMENT 'Este campo se calcula mediante un trigger que suma los importes de cada lina de pedido.',
+    
    PRIMARY KEY (`id`),
   CONSTRAINT `fk_pe_cliente_id`
     FOREIGN KEY (`cliente_id`)
@@ -291,6 +292,7 @@ USE `Pizzeria`;
 DELIMITER $$
 
 -- Trigger para bloquear modificaciones en el precio de productos_pedidos
+
 DROP TRIGGER IF EXISTS `Pizzeria`.`productos_pedidos_BEFORE_UPDATE` $$
 CREATE DEFINER = CURRENT_USER TRIGGER `Pizzeria`.`productos_pedidos_BEFORE_UPDATE` 
 BEFORE UPDATE ON `productos_pedidos` 
@@ -303,6 +305,7 @@ BEGIN
 END$$
 
 -- Trigger para asignar el precio desde la tabla productos al insertar
+
 DROP TRIGGER IF EXISTS `Pizzeria`.`productos_pedidos_BEFORE_INSERT` $$
 CREATE DEFINER = CURRENT_USER TRIGGER `Pizzeria`.`productos_pedidos_BEFORE_INSERT` 
 BEFORE INSERT ON `productos_pedidos` 
@@ -316,6 +319,23 @@ BEGIN
     
     SET NEW.producto_pvp = encuentra_pvp;
 END$$
+
+-- Trigger para totalizar el importe de las lineas de pedido en la tabla pedido:
+
+DROP TRIGGER IF EXISTS `Pizzeria`.`productos_pedidos_AFTER_INSERT` $$
+CREATE DEFINER = CURRENT_USER TRIGGER `Pizzeria`.`productos_pedidos_AFTER_INSERT` 
+AFTER INSERT ON `productos_pedidos` 
+FOR EACH ROW
+BEGIN
+	UPDATE pedidos
+    SET importe_pedido = (
+		SELECT sum(importe)
+        FROM productos_pedidos p_pe
+        WHERE p_pe.pedido_id = NEW.pedido_id
+        )
+	WHERE pedidos.id = NEW.pedido_id;
+END$$
+
 
 -- Trigger para asignar fecha y hora de entrega en la tabla entregas
 USE `Pizzeria`$$
@@ -413,13 +433,13 @@ VALUES
 (4, 1),
 (5, 3);
 
-INSERT INTO pizzeria.pedidos (id, tienda_id, cliente_id, fecha_y_hora_pedido, forma_entrega, importe_pedido)
+INSERT INTO pizzeria.pedidos (id, tienda_id, cliente_id, fecha_y_hora_pedido, forma_entrega)
 VALUES
-(1, 1, 1, '2024-01-01 12:30:00', 'domicilio', 25.50),
-(2, 2, 2, '2024-01-02 13:00:00', 'recogida', 19.00),
-(3, 3, 3, '2024-01-03 14:00:00', 'domicilio', 28.00),
-(4, 4, 4, '2024-01-04 15:30:00', 'domicilio', 15.00),
-(5, 5, 5, '2024-01-05 16:00:00', 'recogida', 20.00);
+(1, 1, 1, '2024-01-01 12:30:00', 'domicilio'),
+(2, 2, 2, '2024-01-02 13:00:00', 'recogida'),
+(3, 3, 3, '2024-01-03 14:00:00', 'domicilio'),
+(4, 4, 4, '2024-01-04 15:30:00', 'domicilio'),
+(5, 5, 5, '2024-01-05 16:00:00', 'recogida');
 
 INSERT INTO pizzeria.productos_pedidos (pedido_id, producto_id, unidades)
 VALUES

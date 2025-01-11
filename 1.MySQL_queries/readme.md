@@ -2,7 +2,7 @@
 
 ## 📄 Descripció
 
-Aquest repositori conté les solucions als exercicis del Tema 1 del Sprint 2, centrats en consultes SQL utilitzant bases de dades relacionals. Es treballa amb les bases de dades **"Tienda"** i **"Universidad"**, aplicant diverses operacions com seleccions, conversions i manipulacions de dades.
+Aquest repositori conté l primera entrega del Tema 1 del Sprint 2 amb les consultes SQL de les bbdd "tienda" i "universistat" utilitzant bases de dades relacionals. Es treballa amb les bases de dades **"Tienda"** i **"Universidad"**, aplicant diverses operacions com seleccions, conversions i manipulacions de dades.
 
 ---
 
@@ -37,6 +37,9 @@ A la carpeta *bbdd*: executables per crear les bases de dades
 - schema_universidad.sql
 
 A la carpeta *consultes*: resolució exercicis
+- al fitxer : consultes_tema1_ofuscades.sql
+
+A més a més es presenten les consultes no ofuscades amb enunciats:
 
 - Queries_tienda_1_20.sql: consultes 1 a 20 sobre la base de dades "Tienda".
 - Queries_tienda_21_39.sql: consultes 21 a 39 sobre la base de dades "Tienda".
